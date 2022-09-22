@@ -1,12 +1,26 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.16 <0.9.0;
+import "./Owned.sol";
 
 
-contract Faucet {
+contract Faucet is Owned{
     
     uint public numOfFunders;
     mapping(address => bool) private funders;
     mapping(uint => address) private lutFunders;
+    address public owner;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner {
+        require(
+            msg.sender == owner,
+            "Only Owner can call this function"
+        );
+        _;
+    }
 
     modifier limitWithdraw(uint withdrawAmount){
         require(withdrawAmount <= 100000000000000000, "Cannot withdraw more than 0.1 Ether"); 
@@ -49,7 +63,4 @@ contract Faucet {
 
 // instance.withdraw("500000000000000000", {from: accounts[1]})
 
-// instance.getFunderAtIndex(0)
 // instance.getAllFunders()
-
-// 
